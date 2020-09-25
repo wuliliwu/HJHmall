@@ -1,21 +1,21 @@
 <template>
     <tab-bar>
-      <tab-bar-item path="/home" activeColor="#c41373">
+      <tab-bar-item path="/home" >
         <img slot="item-icon" src="~assets/img/tabbar/home.svg" alt="">
         <img slot="item-icon-active" src="~assets/img/tabbar/home1.svg" alt="">
         <div slot="item-text">首页</div>
       </tab-bar-item>
-      <tab-bar-item path="/category" activeColor="#c41373">
+      <tab-bar-item path="/category" >
         <img slot="item-icon" src="~assets/img/tabbar/grid.svg" alt="">
         <img slot="item-icon-active" src="~assets/img/tabbar/grid1.svg" alt="">
         <div slot="item-text">分类</div>
       </tab-bar-item>
-      <tab-bar-item path="/cart" activeColor="#c41373">
+      <tab-bar-item path="/cart">
         <img slot="item-icon" src="~assets/img/tabbar/gouwuche.svg" alt="">
         <img slot="item-icon-active" src="~assets/img/tabbar/gouwuche1.svg" alt="">
         <div slot="item-text">购物车 </div>
       </tab-bar-item>
-      <tab-bar-item path="/profile" activeColor="#c41373">
+      <tab-bar-item path="/profile">
         <img slot="item-icon" src="~assets/img/tabbar/gerenzhongxin.svg" alt="">
         <img slot="item-icon-active" src="~assets/img/tabbar/gerenzhongxin1.svg" alt="">
         <div slot="item-text">我的</div>
