@@ -20,12 +20,7 @@
                     return []
                 }
             },
-            // recommends:{
-            //     type: Array,
-            //     default(){
-            //         return []
-            //     }
-            // }
+
         },
         components: {
             Swiper,
