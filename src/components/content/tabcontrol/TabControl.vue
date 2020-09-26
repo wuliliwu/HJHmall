@@ -27,8 +27,9 @@
         },
         methods: {
             TitleClick(index){
-                this.currentIndex = index
-                // console.log(111)
+                this.currentIndex = index;
+                this.$emit('tabClick',index)
+
             }
         }
     }
@@ -41,6 +42,7 @@
         font-weight: bold;
         height: 40px;
         line-height: 40px;
+        z-index: 8;
         /*border-bottom: 1px solid #ccc;*/
     }
     .tab-control-item {
