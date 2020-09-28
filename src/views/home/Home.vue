@@ -5,7 +5,7 @@
     </nav-bar>
     <tab-control class="tab-control fixed"
                  :titles="['流行','新款','精选']"
-                 ref="tabControl"
+                 ref="tabControl1"
                  v-show="isTabFixed"
                  @tabClick="tabClick"></tab-control>
 
@@ -16,12 +16,13 @@
             :data="showGoodsList"
             :pull-up-load="true"
             :probe-type="3">
-      <home-swiper :banners="banners"></home-swiper>
+      <home-swiper :banners="banners"
+                   ref="hSwiper"></home-swiper>
       <recommend-view :recommends="recommends"></recommend-view>
       <feature-view></feature-view>
       <tab-control class="tab-control"
                    :titles="['流行','新款','精选']"
-                   ref="tabControl"
+                   ref="tabControl2"
                    @tabClick="tabClick"></tab-control>
       <!-- 这里注意子组件向父组件传递数据，函数方法默认带上参数，不需要写tabClick（index）-->
       <goods-list :goods="showGooods"></goods-list>
@@ -82,9 +83,13 @@
         tabOffsetTop: 0,
         showBackTop: false,
         // 类型
-        currentType: 'pop'
+        currentType: 'pop',
+        currentPage: 1,
+        // 保存离开前的y值
+        saveY: 0
       }
     },
+    // --------------------------------------------
     computed: {
       showGooods() {
         return this.goods[this.currentType].list
@@ -103,11 +108,42 @@
       this.getHomeGoods('sell')
 
 
+      },
+
+    // ----------------------------------------
+    mounted() {
+      // 监听item图片是否加载完成
+      const refresh = this.debounce(this.$refs.scroll.refresh,10000)
+      this.$bus.$on('itemImageLoad',() => {
+        // console.log('---------')
+        // this.$refs.scroll.refresh()
+        refresh()
+      })
     },
+    // 生命周期函数
+    // activated() {
+    //   console.log(111111)
+    //   this.$refs.scroll.scrollTo(0,-1000,0)
+    // },
+    // deactivated() {
+    //   this.saveY = -1000
+    // },
+    // activated: function () {
+    //   // this.$refs.hSwiper.startTimer()
+    // },
+    // deactivated: function () {
+    //   // this.$refs.hSwiper.stopTimer()
+    // },
+
+
+    // ---------------------------------------------------
     updated() {
-      this.tabOffsetTop = this.$refs.tabControl.$el.offsetTop
-      console.log(this.tabOffsetTop);
+      // 所有的组件都有一个属性$el用于获取组件中的元素
+      this.tabOffsetTop = this.$refs.tabControl2.$el.offsetTop
+      // console.log(this.tabOffsetTop);
     },
+
+    //------------------------------------------------
     methods: {
       // 网络请求的相关方法
       getHomeMultidata(){
@@ -118,12 +154,25 @@
             this.banners = res.data.banner.list;
             this.recommends = res.data.recommend.list;
             this.$nextTick(() => {
-            this.tabOffsetTop = this.$refs.tabControl.$el.offsetTop
+            this.tabOffsetTop = this.$refs.tabControl2.$el.offsetTop
           })
 
         }, err => {
             // console.log(err)
         })
+      },
+      // 防抖函数
+      debounce(func,delay){
+        let timer = null
+        return function (...args) {
+          if(timer) clearInterval(timer)
+          timer = setInterval(() => {
+            func.apply(this,args)
+            // console.log(this)
+          },delay)
+        }
+
+
       },
       getHomeGoods(type){
         const page = this.goods[type].page + 1
@@ -133,13 +182,13 @@
           // 这里不能用赋值的方法，赋值会覆盖掉原来的数据，采用push方法
           this.goods[type].list.push(...res.data.list);//数组解构
           this.goods[type].page + 1;
+
           this.$refs.scroll.finishPullUp();
 
         },error => {
-          console.log(err)
+          // console.log(err)
         })
       },
-
       //事件监听相关方法
       tabClick(index) {
         switch (index) {
@@ -154,6 +203,8 @@
             break
 
         }
+        this.$refs.tabControl1.currentIndex = index
+        this.$refs.tabControl2.currentIndex = index
       },
       loadMore() {
         this.getHomeGoods(this.currentType)
@@ -167,7 +218,7 @@
       },
 
       backTop() {
-        this.$refs.scroll.scrollTo(0, 0, 1000)
+        this.$refs.scroll.scrollTo(0, 0, 800)
         // console.log(111)
       },
 
@@ -192,12 +243,12 @@
 
 
   }
-    .tab-control {
-      position: sticky;
-      top: 44px;
-      background-color: #fff;
+    /*.tab-control {*/
+    /*  position: sticky;*/
+    /*  top: 44px;*/
+    /*  background-color: #fff;*/
         
-    }
+    /*}*/
   .content {
     position: absolute;
     top: 44px;
@@ -210,6 +261,8 @@
     top: 44px;
     left: 0;
     right: 0;
+    background-color: #fff;
+
   }
   .back-top {
     position: fixed;

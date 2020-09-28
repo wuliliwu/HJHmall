@@ -24,7 +24,7 @@
       },
       pullUpLoad: {
         type: Boolean,
-        default: false
+        default: true
       }
     },
     data() {
@@ -64,11 +64,14 @@
       },
       scrollTo(x, y, time) {
         this.scroll && this.scroll.scrollTo && this.scroll.scrollTo(x, y, time)
-      }
+      },
+      // getScrollY() {
+      //   return this.scroll ? this.scroll.scroll.y : 0
+      // }
     },
     watch: {
       data() {
-        setTimeout(this.refresh, 20)
+        setTimeout(this.refresh, 500)
       }
     }
   }
