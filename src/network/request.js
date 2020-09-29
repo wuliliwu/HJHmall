@@ -4,7 +4,7 @@ export function request(config) {
     // 创建axios实例
     const instance = axios.create({
         // 在这里写网络请求相关的公共模块
-        baseURL: 'http://152.136.185.210:8000/api/z8',
+        baseURL: 'http://152.136.185.210:8000/api/w6',
         timeout: 1000000
 
     })

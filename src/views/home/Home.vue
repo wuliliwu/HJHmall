@@ -86,7 +86,8 @@
         currentType: 'pop',
         currentPage: 1,
         // 保存离开前的y值
-        saveY: 0
+        saveY: 0,
+        itemImageListenter: null
       }
     },
     // --------------------------------------------
@@ -113,21 +114,22 @@
     // ----------------------------------------
     mounted() {
       // 监听item图片是否加载完成
-      const refresh = this.debounce(this.$refs.scroll.refresh,10000)
-      this.$bus.$on('itemImageLoad',() => {
-        // console.log('---------')
-        // this.$refs.scroll.refresh()
-        refresh()
-      })
+      const newrefresh = this.debounce(this.$refs.scroll.refresh,10000)
+
+      this.itemImageListenter = () => {
+        newrefresh(20,30,'abc')
+      }
+      this.$bus.$on('itemImageLoad',this.itemImageListenter)
     },
     // 生命周期函数
     // activated() {
     //   console.log(111111)
     //   this.$refs.scroll.scrollTo(0,-1000,0)
     // },
-    // deactivated() {
-    //   this.saveY = -1000
-    // },
+    deactivated() {
+      // this.saveY = -1000
+      this.$bus.$off('itemImageLoad',this.itemImageListenter)
+    },
     // activated: function () {
     //   // this.$refs.hSwiper.startTimer()
     // },
@@ -158,7 +160,7 @@
           })
 
         }, err => {
-            // console.log(err)
+            console.log(err)
         })
       },
       // 防抖函数
@@ -186,7 +188,7 @@
           this.$refs.scroll.finishPullUp();
 
         },error => {
-          // console.log(err)
+          console.log(err)
         })
       },
       //事件监听相关方法
