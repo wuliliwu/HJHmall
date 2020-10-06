@@ -1,6 +1,6 @@
 <template>
   <div class="wrapper" ref="wrapper">
-    <div class="content">
+    <div>
       <slot></slot>
     </div>
 
@@ -78,5 +78,11 @@
 </script>
 
 <style scoped>
+ .wrapper {
+   position: absolute;
+   left: 0;
+   top: 0;
+   overflow: hidden;
+ }
 
 </style>

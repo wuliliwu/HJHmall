@@ -25,7 +25,7 @@
                    ref="tabControl2"
                    @tabClick="tabClick"></tab-control>
       <!-- 这里注意子组件向父组件传递数据，函数方法默认带上参数，不需要写tabClick（index）-->
-      <goods-list :goods="showGooods"></goods-list>
+      <goods-list :goods="showGoods"></goods-list>
     </scroll>
 
     <back-top @backTop="backTop" class="back-top" v-show="showBackTop"></back-top>
@@ -44,9 +44,11 @@
   import GoodsList from "components/content/goods/GoodsList";
   import Scroll from "components/common/scroll/Scroll";
   import BackTop from "components/content/backtop/BackTop";
+
   // 导入函数
-  import {getHomeMultidata} from "network/home";
-  import {getHomeGoods} from "network/home";
+  import {getHomeMultidata} from "../../network/home";
+  import {getHomeGoods} from "../../network/home";
+
 
   // 滚动组件
 
@@ -92,7 +94,7 @@
     },
     // --------------------------------------------
     computed: {
-      showGooods() {
+      showGoods() {
         return this.goods[this.currentType].list
       },
       showGoodsList() {
@@ -121,21 +123,14 @@
       }
       this.$bus.$on('itemImageLoad',this.itemImageListenter)
     },
-    // 生命周期函数
-    // activated() {
-    //   console.log(111111)
-    //   this.$refs.scroll.scrollTo(0,-1000,0)
-    // },
+
     deactivated() {
       // this.saveY = -1000
+
+      // 取消全局事件的监听
       this.$bus.$off('itemImageLoad',this.itemImageListenter)
     },
-    // activated: function () {
-    //   // this.$refs.hSwiper.startTimer()
-    // },
-    // deactivated: function () {
-    //   // this.$refs.hSwiper.stopTimer()
-    // },
+
 
 
     // ---------------------------------------------------
@@ -164,18 +159,23 @@
         })
       },
       // 防抖函数
-      debounce(func,delay){
+      debounce(func,delay) {
         let timer = null
         return function (...args) {
-          if(timer) clearInterval(timer)
+          if (timer) clearInterval(timer)
           timer = setInterval(() => {
-            func.apply(this,args)
+            func.apply(this, args)
             // console.log(this)
-          },delay)
+          }, delay)
         }
-
-
       },
+
+      // 返回顶部
+      backTop() {
+        this.$refs.scroll.scrollTo(0, 0, 800)
+      },
+
+
       getHomeGoods(type){
         const page = this.goods[type].page + 1
         getHomeGoods(type,1).then(res => {
@@ -218,14 +218,11 @@
         // 2.决定backTop是否显示
         this.showBackTop = position.y < -BACKTOP_DISTANCE
       },
-
-      backTop() {
-        this.$refs.scroll.scrollTo(0, 0, 800)
-        // console.log(111)
-      },
+    },
 
 
-     }
+
+
   }
 </script>
 
@@ -245,12 +242,6 @@
 
 
   }
-    /*.tab-control {*/
-    /*  position: sticky;*/
-    /*  top: 44px;*/
-    /*  background-color: #fff;*/
-        
-    /*}*/
   .content {
     position: absolute;
     top: 44px;

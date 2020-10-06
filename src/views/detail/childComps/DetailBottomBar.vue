@@ -26,6 +26,7 @@
 		name: "DetailBottomBar",
     methods: {
       addToCart() {
+        // console.log('点击添加到购物车')
         this.$emit('addToCart')
       }
     }
@@ -40,8 +41,7 @@
     left: 0;
     right: 0;
     bottom: 0;
-    border-top-left-radius: 10px;
-    border-top-right-radius: 10px;
+    /*border-top-left-radius: 10px;*/
     display: flex;
     text-align: center;
   }
@@ -49,6 +49,7 @@
   .bar-item {
     flex: 1;
     display: flex;
+
   }
 
   .bar-item>div {
@@ -80,16 +81,19 @@
     font-size: 15px;
     color: #fff;
     line-height: 58px;
+
   }
 
   .bar-right .cart {
     font-weight: bold;
     background-color: #ffe817;
     color: #333;
+
   }
 
   .bar-right .buy {
     font-weight: bold;
     background-color: #f69;
+
   }
 </style>

@@ -1,24 +1,28 @@
 <template>
-    <div id="detail">
-        <detail-nav-bar class="detail-nav"/>
-<!--        <scroll class="detail-content" ref="scroll">-->
+    <div class="detail">
+        <detail-nav-bar class="detail-nav" @titleClick="titleClick"/>
+
+<!--        <scroll class="content">-->
+<!--            <div>{{$store.state.cartList.length}}</div>-->
             <detail-swiper :top-images="topImages"></detail-swiper>
             <detail-base-info :goods="goods"></detail-base-info>
             <detail-shop-info :shop="shop"></detail-shop-info>
-            <detail-goods-info
-                    :detail-info="detailInfo"
-            ></detail-goods-info>
+            <detail-goods-info :detail-info="detailInfo"></detail-goods-info>
             <detail-param-info :param-info="paramInfo"></detail-param-info>
             <detail-comment-info :comment-info="commentInfo"></detail-comment-info>
-<!--            <detail-recommend-info :recommend-list="recommendList"></detail-recommend-info>-->
             <goods-list :goods="recommendList"></goods-list>
-            <detail-bottom-bar class="bottom-bar"></detail-bottom-bar>
+
+
 <!--        </scroll>-->
+
+            <detail-bottom-bar class="bottom-bar" @addToCart="addToCart"></detail-bottom-bar>
+
+
     </div>
 </template>
 
 <script>
-    import Scroll from "components/common/scroll/Scroll";
+    import Scroll from "../../components/common/scroll/Scroll";
     import DetailNavBar from "./childComps/DetailNavBar";
     import DetailSwiper from "./childComps/DetailSwiper";
     import DetailBaseInfo from "./childComps/DetailBaseInfo";
@@ -32,7 +36,6 @@
 
 
     import {getDetailData,Goods,Shop,GoodsParam,getRecommend} from "network/detail";
-
 
     export default {
     name: "Detail",
@@ -60,6 +63,8 @@
         paramInfo: {},
         commentInfo: {},
         recommendList: [],
+        // 导航点击滚动的
+        themeTopYs: [0,1000,2000,3000]
       }
     },
     created() {
@@ -101,50 +106,71 @@
     },
 
      methods: {
-        // imageLoad() {
-        //     this.$refs.scroll.refresh()
-        // }
+       //这是准备弄点击顶部导航然后跳转的，因为没有用上better-scroll，所以暂时不做切换
+       titleClick(index) {
+         // console.log(index)
+       },
+        //添加到购物车
+       addToCart() {
+         // 获取购物车需要展示的信息
+         const product = {}
+         product.image = this.topImages[0];
+         product.title = this.goods.title;
+         product.desc = this.goods.desc;
+         product.price = this.goods.nowPrice;
+         product.iid = this.iid;
+
+         //将商品添加到购物车
+         this.$store.dispatch('addCart',product)
+
+
+
+       }
+      },
+      mounted() {
+        // const newrefresh = this.debounce(this.$refs.scroll.refresh,10000)
+        this.$bus.$on('itemLoad', () => {
+
+        })
       }
-  }
+    }
 </script>
 
 <style scoped>
-    #detail {
-        position: relative;
-        z-index: 10;
-        background-color: #ffffff;
 
+/*------------------------------------------------*/
+    .detail {
+        position: relative;
+        z-index: 99;
+        background-color: #ffffff;
     }
     .detail-nav {
         position: sticky;
-        top: 0;
         left: 0;
         right: 0;
-        z-index: 11;
+        top: 0;
         background-color: #fff;
+        z-index: 99;
     }
-/*------------------------------------------------*/
-/*    #detail {*/
-/*        !*position: relative;*!*/
-/*        z-index: 99;*/
-/*        height: 100vh;*/
-/*        background-color: #ffffff;*/
-/*    }*/
-/*    .detail-nav {*/
-/*        position: relative;*/
-/*        background-color: #fff;*/
-/*        z-index: 99;*/
-/*    }*/
-/*    .detail-content {*/
-/*        background-color: #fff;*/
-/*        height: calc(100%);*/
-/*    }*/
-/*    .bottom-bar {*/
-/*        position: sticky;*/
-/*        left: 0;*/
-/*        right: 0;*/
-/*        bottom: 0;*/
-/*        z-index: 999;*/
-/*    }*/
+
+    .bottom-bar {
+        position: sticky;
+        left: 0;
+        right: 0;
+        bottom: 0;
+        z-index: 99;
+    }
+
+    /*--------------使用better-scroll的代码-----------------------*/
+    /*.detail {*/
+    /*    position: relative;*/
+    /*    height: 999px;*/
+    /*    background-color: #fff;*/
+    /*    z-index: 99;*/
+    /*}*/
+    /*.content {*/
+    /*    background-color: #fff;*/
+    /*    height: calc(100% - 44px);*/
+    /*}*/
 
 </style>
