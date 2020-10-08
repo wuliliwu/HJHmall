@@ -5,7 +5,7 @@
                  v-model="isSelectAll"></CheckButton>
     <span>全选</span>
     <span class="total-price">合计: ¥{{totalPrice}}</span>
-    <span class="buy-product">去计算({{$store.getters.cartCount}})</span>
+    <span class="buy-product">去计算({{checkLenght}})</span>
   </div>
 </template>
 
@@ -18,16 +18,19 @@
 		  CheckButton
     },
     computed: {
-		  totalPrice() {
+        totalPrice() {
         const cartList = this.$store.getters.cartList;
         return cartList.filter(item => {
           return item.checked
         }).reduce((preValue, item) => {
-          return preValue + item.count * item.newPrice
+          return preValue + item.count * item.price
         }, 0).toFixed(2)
       },
       isSelectAll: function () {
         return this.$store.getters.cartList.find(item => item.checked === false) === undefined;
+      },
+      checkLenght() {
+          return this.$store.state.cartList.filter(item => item.checked).length
       }
     },
     methods: {
@@ -80,10 +83,12 @@
   }
 
   .bottom-menu .buy-product {
-    background-color: orangered;
+    background-color: #f70000;
     color: #fff;
     width: 100px;
     height: 44px;
+    font-weight: bold;
+
     text-align: center;
     line-height: 44px;
     float: right;

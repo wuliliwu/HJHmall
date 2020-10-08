@@ -30,7 +30,7 @@
 
 <style scoped>
   #user-info {
-    background-color: #d33fa2;
+    background-color: var(--color-tint);
     padding: 15px;
     margin-top: -5px;
   }

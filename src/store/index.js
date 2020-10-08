@@ -22,7 +22,6 @@ export default new Vuex.Store({
 
       }else {
         payload.count = 1
-        // context.state.cartList.push(payload)
         context.commit('AddToCart',payload)
       }
     }
